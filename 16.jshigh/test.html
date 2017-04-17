@@ -1,0 +1,32 @@
+<script>
+// 	var add = new Function('a', 'b', 'return a + b');
+// // 创建了就送一个add.prototype对象
+// console.log(add.prototype);
+
+// var o1 = new Object();
+
+// console.log(o1.__proto__ === Object.prototype);
+// console.log(Object.prototype.__proto__);
+
+// for (var i = 0; i <= 5; i++) {
+// 	(function(j) {
+// 		setTimeout(function() {
+// 			console.log(j);
+// 		}, 1000);
+// 	})(i)
+	
+// }
+
+function City() {
+
+}
+
+function one() {
+	var a = new City();
+	return function() {
+		return a;
+	}
+}
+var s = one();
+var s2 = one();
+</script>

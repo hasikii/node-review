@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	用户名<input type="text" name="username"><br/>
+	年龄<input type="text" name="age"><br/>
+	<input type="button" onclick="reg()" value="注册">
+	<input type="button" onclick="check()" value="查询">
+
+	<table>
+		<tbody>
+			<thead>
+				<tr>
+					<td>用户名</td>
+					<td>年龄</td>
+				</tr>
+			</thead>
+			<tbody id="area">
+				
+			</tbody>
+		</tbody>
+	</table>
+
+	<table>
+		<thead>
+			<tr>
+				<td>查询结果：</td>
+			</tr>
+			<tr>
+				<td>用户名</td>
+				<td>年龄</td>
+			</tr>
+		</thead>
+		<tbody id="check">
+			
+		</tbody>
+	</table>
+<script>
+
+function reg() {
+
+	var username = document.querySelector("input[name='username']").value;
+	var age = document.querySelector("input[name='age']").value;
+	var user = {
+		username: username,
+		age: age
+	}
+
+	// 1. 创建ajax对象
+	var xhr = new XMLHttpRequest();
+	// 2. 指定参数
+	xhr.open('post', '/reg', true);
+	// 设置响应类型，会自动化把xhr.response转成设置的类型，下面设置为json
+	xhr.responseType = 'json';
+	// 3. 监听状态
+	xhr.onreadystatechange = function() {
+		// No.3
+		// No.4
+		//alert(xhr.readyState);
+		if (xhr.readyState == 4) {
+			if (xhr.status == 200) {
+				console.log(xhr.response);
+				var res = xhr.response;
+				var domStr = '';
+				for (var i = 0; i < res.length; i++) {
+					domStr += '<tr> <td>'+ res[i].username + '</td> <td>' + res[i].age + '</td> </tr>'
+					document.querySelector('#area').innerHTML = domStr;
+				}
+			} else {
+				document.querySelector('#clock').innerHTML = '出意外了: ' + xhr.statusText;
+			}
+		}
+		
+	}
+	// 4. 指定请求体发送数据
+	xhr.send(JSON.stringify(user)); // No.2
+}
+
+function check() {
+	
+	var username = document.querySelector("input[name='username']").value;
+	var age = document.querySelector("input[name='age']").value;
+	var user = {
+		username: username,
+		age: age
+	}
+
+	// 1. 创建ajax对象
+	var xhr = new XMLHttpRequest();
+	// 2. 指定参数
+	xhr.open('post', '/check', true);
+	// 设置响应类型，会自动化把xhr.response转成设置的类型，下面设置为json
+	xhr.responseType = 'json';
+	// 3. 监听状态
+	xhr.onreadystatechange = function() {
+		// No.3
+		// No.4
+		//alert(xhr.readyState);
+		if (xhr.readyState == 4) {
+			if (xhr.status == 200) {
+				console.log(xhr.response);
+				var res = xhr.response;
+
+				var domStr = '';
+				for (var i = 0; i < res.length; i++) {
+					domStr += '<tr><td>'+res[i].username+'</td><td>'+res[i].age+'</td></tr>';
+				}
+
+				document.querySelector('#check').innerHTML = domStr;
+			} else {
+				document.querySelector('#clock').innerHTML = '出意外了: ' + xhr.statusText;
+			}
+		}
+		
+	}
+	// 4. 指定请求体发送数据
+	xhr.send(JSON.stringify(user)); // No.2
+}
+</script>
+</body>
+</html>

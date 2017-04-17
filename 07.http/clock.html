@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<div id="clock"></div>
+<script>
+	window.onload = function() {
+		setInterval(function() {
+			// 1. 创建ajax对象
+			var xhr = new XMLHttpRequest();
+			// 2. 指定参数
+			xhr.open('get', '/clock', true);
+			// 3. 监听状态
+			xhr.onreadystatechange = function() {
+				// No.3
+				// No.4
+				//alert(xhr.readyState);
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						document.querySelector('#clock').innerHTML = xhr.responseText;
+					} else {
+						document.querySelector('#clock').innerHTML = '出意外了: ' + xhr.statusText;
+					}
+				}
+				
+			}
+			// 4. 指定请求体发送数据
+			xhr.send(); // No.2
+		}, 1000);
+	}
+</script>
+</body>
+</html>

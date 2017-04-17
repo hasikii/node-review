@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<form name="userform" method="post" enctype="multipart/form-data">
+		用户名<input type="text" name="username"><br/>
+		密码<input type="text" name="password"><br/>
+		头像<input type="file" name="avatar">
+		<input type="submit" value="注册">
+		<input  id="regBtn" type="button" value="注册">
+	</form>
+<script>
+
+		function serialize(form) {
+			// console.log(form.elements);
+			var elements = Array.prototype.slice.call(form.elements); // 不是一个数组
+			var data = [];
+			elements.forEach(function(element, index) {
+				var type = element.type;
+				switch (type) {
+					case 'text': 
+						data.push(element.name + '=' + element.value);
+						break;
+					case 'submit':
+					case 'cancel':
+					case 'reset':
+						break;
+				}	
+			});
+			return data.join('&');
+		}
+
+		function toJson(form) {
+			// console.log(form.elements);
+			var elements = Array.prototype.slice.call(form.elements); // 不是一个数组
+			var data = {};
+			elements.forEach(function(element, index) {
+				var type = element.type;
+				switch (type) {
+					case 'text': 
+						data[element.name] = element.value;
+						break;
+					case 'submit':
+					case 'cancel':
+					case 'reset':
+						break;
+				}
+			});
+			return JSON.stringify(data);
+		}
+
+		window.onload = function () {
+			document.querySelector('#regBtn').addEventListener('click', function() {
+				var xhr = new XMLHttpRequest();
+
+				xhr.open('post', '/reg2', true);
+
+				xhr.responseType = 'text';
+				// 1. 表单序列化提交
+				//xhr.setRequestHeader('Content-Type', 'application/x-www-from-urlencoded');
+				// 2. json字符串提交
+				//xhr.setRequestHeader('Content-Type', 'application/json'); // 对应var data = toJson(document.querySelector('form')); console.log(data);
+				
+
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == xhr.DONE) {
+						if (/2\d{2}/.test(xhr.status)) {
+							console.log(xhr.responseText);
+							// 上传后把图片显示出来
+							/**
+							 * 1.在服务器上，把files里的avatar的path读出来，复制到imgs目录下
+							 * 2.把此图片的路径返回到浏览器
+							 * 3.浏览器构建一个img元素，把2的路径追加到body上，并且指定src
+							 * 4.服务器端可以接受客户端发出的请求图片的请求，返回图片的内容
+							 */
+							var img = document.createElement('img');
+							img.src = xhr.responseText;
+							document.body.appendChild(img);
+						}
+					}
+				}
+
+				// var data = serialize(document.querySelector('form')); console.log(data);
+				//var data = toJson(document.querySelector('form')); console.log(data);
+
+				// 并没有指定header
+				var formData = new FormData();
+				formData.append('username', document.querySelector('input[name=username]').value);
+				formData.append('password', document.querySelector('input[name=password]').value);
+				formData.append('avatar', document.querySelector('input[name=avatar]').files[0]);
+				console.log(formData);
+				
+				xhr.send(formData);
+			});
+			
+		}
+
+</script>
+</body>
+</html>

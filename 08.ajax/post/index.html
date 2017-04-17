@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<form name="userform">
+		用户名<input type="text" name="username">
+		密码<input type="text" name="password">
+		<input  id="regBtn" type="button" value="注册">
+	</form>
+<script>
+
+	function serialize(form) {
+		// console.log(form.elements);
+		var elements = Array.prototype.slice.call(form.elements); // 不是一个数组
+		var data = [];
+		elements.forEach(function(element, index) {
+			var type = element.type;
+			switch (type) {
+				case 'text': 
+					data.push(element.name + '=' + element.value);
+					break;
+				case 'submit':
+				case 'cancel':
+				case 'reset':
+					break;
+			}
+			
+		});
+		return data.join('&');
+	}
+
+	window.onload = function () {
+		document.querySelector('#regBtn').addEventListener('click', function() {
+			var xhr = new XMLHttpRequest();
+
+			xhr.open('post', '/reg', true);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == xhr.DONE) {
+					if (/2\d{2}/.test(xhr.status)) {
+						console.log(xhr.responseText);
+					}
+				}
+			}
+
+			var data = serialize(document.querySelector('form'));
+			console.log(data);
+			xhr.send(data);
+		});
+		
+	}
+
+
+</script>
+</body>
+</html>

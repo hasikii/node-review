@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<ul id="content"></ul>
+<script>
+	function jsonp(opts) {
+
+		// ====== util =======
+		function random6Num() {
+			var num = '';
+			for (var i = 0; i < 6; i++) {
+				num += Math.floor(Math.random()*10);
+			}
+			return num;
+		}
+		var randomNum = random6Num();
+
+		// 1. 创建scirpt元素
+		var script = document.createElement('script');
+		script.src = opts.url + '?callbackname=' + 'jsonp' + randomNum;
+		document.body.appendChild(script);
+		// 2. 创建window下的callback
+		window['jsonp' + randomNum] = function(res) {
+			opts.successCB(res);
+		};
+	}
+
+	jsonp({
+		url: 'http://localhost:8080/book', // jsonp123456(['js', 'node'])
+		successCB: function(res) {
+			console.log(typeof res);
+			var oUl = document.querySelector('#content');
+			res.forEach(function(text) {
+				var li = document.createElement('li');
+				li.innerHTML = text;
+				oUl.appendChild(li);
+			});
+		}
+	});
+	
+</script>
+</body>
+</html>

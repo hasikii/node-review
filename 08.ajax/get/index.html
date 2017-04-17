@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<ul id="content">
+		
+	</ul>
+<script>
+	var xhr = new XMLHttpRequest();
+
+	xhr.open('get', '/books', true);
+	xhr.responseType = 'json';
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == xhr.DONE) {
+			if (/2\d{2}/.test(xhr.status)) {
+				console.log(xhr.getAllResponseHeaders());
+				console.log(xhr.getResponseHeader('Content-Type'));
+				console.log(xhr.statusText);
+				console.log(xhr.response);
+
+				var DOMStr = '';
+				for (var i = 0; i < xhr.response.length; i++) {
+					DOMStr += '<li>' + xhr.response[i].name + '</li>'
+				}
+				document.querySelector('#content').innerHTML = DOMStr;
+			}
+		}
+	}
+
+	xhr.send();
+</script>
+</body>
+</html>
